@@ -1,15 +1,24 @@
 #include <iostream>
-#include "poker/card.hpp"
+#include <random>
+#include "poker/deck.hpp"
 
 using namespace std;
 
-int main(){
-    Card c1(14, Suit::SPADES);
-    Card c2(13, Suit::DIAMONDS);
+int main() {
+    mt19937 rng(std::random_device{}());
 
-    cout << "Carta 1: " << c1.toString() << endl;
-    cout << "Carta 2: " << c2.toString() << endl;
-    cout << "Rank da carta 2:" << c2.getRank() << endl;
+    Deck deck;
+    deck.removeCard(Card(14, Suit::SPADES));
+    deck.removeCard(Card(13, Suit::HEARTS));
+
+    cout << "Disponiveis apos remover 2: " << deck.avaibleCards() << endl;
+
+    for (int i = 0; i < 5; i++) {
+        Card sorteada = deck.sortCard(rng);
+        std::cout << "Sorteada: " << sorteada.toString() << endl;
+    }
+
+    cout << "Disponiveis apos sortear 5: " << deck.avaibleCards() << endl;
 
     return 0;
 }
