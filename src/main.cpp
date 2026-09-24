@@ -1,35 +1,21 @@
 #include <iostream>
-#include "poker/handEvaluator.hpp"
-#include "poker/card.hpp"
-
-using namespace std;
+#include <random>
+#include "poker/simulator.hpp"
 
 int main() {
-    HandEvaluator eval;
+    std::mt19937 rng(std::random_device{}());
+    Simulator sim;
 
-    //par de Reis
-    vector<Card> mao1 = {
-        Card(13, Suit::SPADES), Card(13, Suit::HEARTS),
-        Card(2, Suit::CLUBS), Card(5, Suit::DIAMONDS),
-        Card(9, Suit::CLUBS), Card(11, Suit::HEARTS), Card(4, Suit::SPADES)
+    std::vector<Card> minhasCartas = {
+        Card(14, Suit::SPADES), Card(14, Suit::HEARTS)  // AA
     };
-    cout << "Par de Reis: " << eval.evaluator(mao1) << std::endl;  //213
+    std::vector<Card> boardVazio = {};  // pre-flop, nada revelado ainda
 
-    //flush de espadas, carta alta Q
-    vector<Card> mao2 = {
-        Card(12, Suit::SPADES), Card(9, Suit::SPADES),
-        Card(7, Suit::SPADES), Card(4, Suit::SPADES),
-        Card(2, Suit::SPADES), Card(11, Suit::HEARTS), Card(3, Suit::CLUBS)
-    };
-    cout << "Flush Q alta: " << eval.evaluator(mao2) << std::endl;  //612
+    ResultSimulator resultado = sim.simulate(minhasCartas, boardVazio, 10000, rng);
 
-    //full house, trinca de 8, par de 3
-    vector<Card> mao3 = {
-        Card(8, Suit::SPADES), Card(8, Suit::HEARTS), Card(8, Suit::CLUBS),
-        Card(3, Suit::SPADES), Card(3, Suit::HEARTS),
-        Card(2, Suit::CLUBS), Card(5, Suit::DIAMONDS)
-    };
-    cout << "Full house 8/3: " << eval.evaluator(mao3) << std::endl;  //708
+    std::cout << "Vitorias: " << resultado.victories << "%" << std::endl;
+    std::cout << "Empates: " << resultado.draw << "%" << std::endl;
+    std::cout << "Derrotas: " << resultado.defeat << "%" << std::endl;
 
     return 0;
 }
